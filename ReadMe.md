@@ -15,4 +15,4 @@ In the Globalsettings the upper number gives the divisor of the calculation King
 
 ### Credits
 
-@opaotti - Game Tester
+@opaotti - Mod Tester
