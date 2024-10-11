@@ -35,6 +35,7 @@ namespace Floor_is_lava
         public bool HasIsma = false;
         public bool Dirthmouth = false;
         public int FramesLimit = 10000000;
+        public int Minus_frames_On_floor_per_skill = 250;
     }
     public class Floor_is_lava : Mod, IGlobalSettings<SaveData>, ILocalSettings<SaveData2>
     {
@@ -49,7 +50,7 @@ namespace Floor_is_lava
         new public string GetName() => "Floor is Lava";
         public override string GetVersion() => "1.0.5.0";
 
-        public int Minus_frames_On_floor_per_skill = 250;
+        
 
         public override void Initialize()
         {
@@ -127,7 +128,7 @@ namespace Floor_is_lava
                 if (SaveData2.Dirthmouth == false)
                 {
                     SaveData2.FramesLimit = FramesOnFloor / SaveData.Divisor_of_frames_in_kings_pass_for_frame_limit;
-                    Minus_frames_On_floor_per_skill = SaveData2.FramesLimit / SaveData.Divisor_of_frames_from_limit_which_are_taken_from_the_limit_per_skill;
+                    SaveData2.Minus_frames_On_floor_per_skill = SaveData2.FramesLimit / SaveData.Divisor_of_frames_from_limit_which_are_taken_from_the_limit_per_skill;
                     SaveData2.Dirthmouth = true;
                 }
             }
@@ -146,16 +147,18 @@ namespace Floor_is_lava
                 {
                     if (PlayerData.instance.hasDash == true)
                     {
-                        SaveData2.  FramesLimit = SaveData2.FramesLimit - Minus_frames_On_floor_per_skill;
+                        SaveData2.  FramesLimit = SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
                         Log($"Limit set to {SaveData2.FramesLimit}");
                         SaveData2.HasDash = true;
                     }
                 }
+                
                 if (SaveData2.HasWings == false)
                 {
                     if (PlayerData.instance.hasDoubleJump == true)
                     {
-                        SaveData2.FramesLimit = SaveData2.FramesLimit - Minus_frames_On_floor_per_skill;
+                        SaveData2.FramesLimit = SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
+                        SaveData2.FramesLimit = SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
                         Log($"Limit set to {SaveData2.FramesLimit}");
                         SaveData2.HasWings = true;
                     }
@@ -164,7 +167,7 @@ namespace Floor_is_lava
                 {
                     if (PlayerData.instance.hasShadowDash == true)
                     {
-                        SaveData2.FramesLimit =   SaveData2.FramesLimit - Minus_frames_On_floor_per_skill;
+                        SaveData2.FramesLimit =   SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
                         Log($"Limit set to {SaveData2.FramesLimit}");
                         SaveData2.HasSDash = true;
                     }
@@ -173,7 +176,8 @@ namespace Floor_is_lava
                 {
                     if (PlayerData.instance.hasWalljump == true)
                     {
-                        SaveData2.FramesLimit = SaveData2.FramesLimit - Minus_frames_On_floor_per_skill;
+                        SaveData2.FramesLimit = SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
+                        SaveData2.FramesLimit = SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
                         Log($"Limit set to {SaveData2.FramesLimit}");
                         SaveData2.HasClaw = true;
                     }
@@ -182,7 +186,7 @@ namespace Floor_is_lava
                 {
                     if (PlayerData.instance.hasSuperDash == true)
                     {
-                        SaveData2.FramesLimit = SaveData2.FramesLimit - Minus_frames_On_floor_per_skill;
+                        SaveData2.FramesLimit = SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
                         Log($"Limit set to {SaveData2.FramesLimit}");
                         SaveData2.HasCDash = true;
                     }
@@ -202,3 +206,4 @@ namespace Floor_is_lava
         public SaveData2 OnSaveLocal() => SaveData2;
     }
 }
+
