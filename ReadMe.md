@@ -9,4 +9,10 @@ A Hollow Knight Floor is Lava mod.
 
 
 ## Introduction
+
 In the Globalsettings the upper number gives the divisor of the calculation KingsPassGroundFrames / the upper number. The result will be the FramesLimit. The lower number is the divisor of the calculation FramesLimit / the lower number. The result is the number of ground frames that are deducted from a new skill.
+
+
+### Credits
+
+@opaotti - Game Tester
