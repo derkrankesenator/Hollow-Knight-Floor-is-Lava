@@ -22,8 +22,8 @@ namespace Floor_is_lava
 {
     public class SaveData
     {
-        public int Divisor_of_frames_in_kings_pass_for_frame_limit = 8;
-        public int Divisor_of_frames_from_limit_which_are_taken_from_the_limit_per_skill = 8;
+        public int Divisor_of_frames_in_kings_pass_for_frame_limit = 2;
+        public double LowerNumber = 0.5;
     }
     public class SaveData2
     {
@@ -34,21 +34,19 @@ namespace Floor_is_lava
         public bool HasSDash = false;
         public bool HasIsma = false;
         public bool Dirthmouth = false;
-        public int FramesLimit = 10000000;
-        public int Minus_frames_On_floor_per_skill = 250;
+        public double FramesLimit = 1000000.00;
+        public double Minus_frames_On_floor_per_skill = 250.00;
     }
     public class Floor_is_lava : Mod, IGlobalSettings<SaveData>, ILocalSettings<SaveData2>
     {
-        public int FramesOnFloor = 0;
-
-        public int FrameOnFloor = 0;
-
+        public double FramesOnFloor = 0;
+       
         public bool ToggleButtonInsideMenu => true;
 
         public static SaveData SaveData { get; set; } = new();
         public static SaveData2 SaveData2 { get; set; } = new();
         new public string GetName() => "Floor is Lava";
-        public override string GetVersion() => "1.0.5.0";
+        public override string GetVersion() => "1.0.6.0";
 
         
 
@@ -83,7 +81,9 @@ namespace Floor_is_lava
         }
 
         // idea: instead of `{FOF} of {FL}`, maybe `{FOF}/{FL}` is better
-        public string FloorFrames => $"{FramesOnFloor} of {SaveData2.FramesLimit}";
+        public string FloorFrames => $"{FramesOnFloor} of {FrameInt}";
+        public int FrameInt = 1000000000;
+
 
         LayoutRoot layout;
         TextObject text;
@@ -114,7 +114,7 @@ namespace Floor_is_lava
 
             if (self.CheckTouchingGround() && self.acceptingInput && !GameManager.instance.isPaused)
             {
-                    FramesOnFloor++;
+                FramesOnFloor = FramesOnFloor + 1;
             }
             text.Text = FloorFrames;
 
@@ -128,10 +128,12 @@ namespace Floor_is_lava
                 if (SaveData2.Dirthmouth == false)
                 {
                     SaveData2.FramesLimit = FramesOnFloor / SaveData.Divisor_of_frames_in_kings_pass_for_frame_limit;
-                    SaveData2.Minus_frames_On_floor_per_skill = SaveData2.FramesLimit / SaveData.Divisor_of_frames_from_limit_which_are_taken_from_the_limit_per_skill;
+                    FramesOnFloor = 0;
+
                     SaveData2.Dirthmouth = true;
                 }
             }
+            FrameInt = Convert.ToInt32(SaveData2.FramesLimit);
             if (PlayerData.instance.visitedCrossroads == true)
             {
                 if (FramesOnFloor > SaveData2.FramesLimit)
@@ -142,23 +144,23 @@ namespace Floor_is_lava
                 if (PlayerData.instance.atBench == true)
                 {
                     FramesOnFloor = 0;
+
                 }
                 if (SaveData2.HasDash == false)
                 {
                     if (PlayerData.instance.hasDash == true)
                     {
-                        SaveData2.  FramesLimit = SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
+                        SaveData2.FramesLimit = SaveData2.FramesLimit * SaveData.LowerNumber;
                         Log($"Limit set to {SaveData2.FramesLimit}");
                         SaveData2.HasDash = true;
                     }
                 }
-                
+
                 if (SaveData2.HasWings == false)
                 {
                     if (PlayerData.instance.hasDoubleJump == true)
                     {
-                        SaveData2.FramesLimit = SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
-                        SaveData2.FramesLimit = SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
+                        SaveData2.FramesLimit = SaveData2.FramesLimit * SaveData.LowerNumber;
                         Log($"Limit set to {SaveData2.FramesLimit}");
                         SaveData2.HasWings = true;
                     }
@@ -167,7 +169,8 @@ namespace Floor_is_lava
                 {
                     if (PlayerData.instance.hasShadowDash == true)
                     {
-                        SaveData2.FramesLimit =   SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
+                        SaveData2.FramesLimit = SaveData2.FramesLimit * SaveData.LowerNumber;
+
                         Log($"Limit set to {SaveData2.FramesLimit}");
                         SaveData2.HasSDash = true;
                     }
@@ -176,8 +179,7 @@ namespace Floor_is_lava
                 {
                     if (PlayerData.instance.hasWalljump == true)
                     {
-                        SaveData2.FramesLimit = SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
-                        SaveData2.FramesLimit = SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
+                        SaveData2.FramesLimit = SaveData2.FramesLimit * SaveData.LowerNumber;
                         Log($"Limit set to {SaveData2.FramesLimit}");
                         SaveData2.HasClaw = true;
                     }
@@ -186,7 +188,7 @@ namespace Floor_is_lava
                 {
                     if (PlayerData.instance.hasSuperDash == true)
                     {
-                        SaveData2.FramesLimit = SaveData2.FramesLimit - SaveData2.Minus_frames_On_floor_per_skill;
+                        SaveData2.FramesLimit = SaveData2.FramesLimit * SaveData.LowerNumber;
                         Log($"Limit set to {SaveData2.FramesLimit}");
                         SaveData2.HasCDash = true;
                     }
@@ -206,4 +208,3 @@ namespace Floor_is_lava
         public SaveData2 OnSaveLocal() => SaveData2;
     }
 }
-
