@@ -1,4 +1,4 @@
-﻿using Modding;
+using Modding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ namespace Floor_is_lava
         public static SaveData SaveData { get; set; } = new();
         public static SaveData2 SaveData2 { get; set; } = new();
         new public string GetName() => "Floor is Lava";
-        public override string GetVersion() => "1.0.6.0";
+        public override string GetVersion() => "1.0.7.0";
 
         
 
@@ -82,6 +82,8 @@ namespace Floor_is_lava
 
         // idea: instead of `{FOF} of {FL}`, maybe `{FOF}/{FL}` is better
         public string FloorFrames => $"{FramesOnFloor} of {FrameInt}";
+        public string NoCompass => $"";
+        public string Final {get; set;} = $"gaos4325";
         public int FrameInt = 1000000000;
 
 
@@ -96,7 +98,7 @@ namespace Floor_is_lava
             layout = new LayoutRoot(false, "Floor is Lava");
             text = new(layout)
             {
-                Text = FloorFrames,
+                Text = Final,
                 Font = UI.TrajanNormal,
                 FontSize = 25
             };
@@ -114,9 +116,9 @@ namespace Floor_is_lava
 
             if (self.CheckTouchingGround() && self.acceptingInput && !GameManager.instance.isPaused)
             {
-                FramesOnFloor = FramesOnFloor + 1;
+                FramesOnFloor++;
             }
-            text.Text = FloorFrames;
+            text.Text = Final;
 
             ModHooks_HeroFixedUpdateHook();
         }
@@ -133,6 +135,16 @@ namespace Floor_is_lava
                     SaveData2.Dirthmouth = true;
                 }
             }
+            if (PlayerData.instance.equippedCharm_2 == true)
+                {
+                    Final = FloorFrames;
+                    Log(Final);
+                }
+                else
+                {
+                    Final = NoCompass;
+                    Log(Final);
+                }
             FrameInt = Convert.ToInt32(SaveData2.FramesLimit);
             if (PlayerData.instance.visitedCrossroads == true)
             {
