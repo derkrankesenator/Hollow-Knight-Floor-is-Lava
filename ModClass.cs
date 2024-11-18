@@ -24,6 +24,7 @@ namespace Floor_is_lava
     {
         public int Divisor_of_frames_in_kings_pass_for_frame_limit = 2;
         public double LowerNumber = 0.5;
+        public bool Compass_Mode = false;
     }
     public class SaveData2
     {
@@ -135,16 +136,19 @@ namespace Floor_is_lava
                     SaveData2.Dirthmouth = true;
                 }
             }
-            if (PlayerData.instance.equippedCharm_2 == true)
-                {
-                    Final = FloorFrames;
-                    Log(Final);
-                }
+            if (SaveData.Compass_Mode == true)
+            {
+                if (PlayerData.instance.equippedCharm_2 == true)
+                    {
+                        Final = FloorFrames;
+                        Log(Final);
+                    }
                 else
-                {
-                    Final = NoCompass;
-                    Log(Final);
-                }
+                    {
+                        Final = NoCompass;
+                        Log(Final);
+                    }
+            }
             FrameInt = Convert.ToInt32(SaveData2.FramesLimit);
             if (PlayerData.instance.visitedCrossroads == true)
             {
