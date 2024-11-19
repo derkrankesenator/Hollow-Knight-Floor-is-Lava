@@ -47,7 +47,7 @@ namespace Floor_is_lava
         public static SaveData SaveData { get; set; } = new();
         public static SaveData2 SaveData2 { get; set; } = new();
         new public string GetName() => "Floor is Lava";
-        public override string GetVersion() => "1.0.7.0";
+        public override string GetVersion() => "1.0.7.1";
 
         
 
@@ -136,6 +136,7 @@ namespace Floor_is_lava
                     SaveData2.Dirthmouth = true;
                 }
             }
+            
             if (SaveData.Compass_Mode == true)
             {
                 if (PlayerData.instance.equippedCharm_2 == true)
@@ -148,6 +149,10 @@ namespace Floor_is_lava
                         Final = NoCompass;
                         Log(Final);
                     }
+            }
+            else
+            {
+                Final = FloorFrames;
             }
             FrameInt = Convert.ToInt32(SaveData2.FramesLimit);
             if (PlayerData.instance.visitedCrossroads == true)
