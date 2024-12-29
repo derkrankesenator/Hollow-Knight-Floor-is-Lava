@@ -155,6 +155,10 @@ namespace Floor_is_lava
                 Final = FloorFrames;
             }
             FrameInt = Convert.ToInt32(SaveData2.FramesLimit);
+            if (PlayerData.instance.atBench == true)
+            {
+                FramesOnFloor = 0;
+            }
             if (PlayerData.instance.visitedCrossroads == true)
             {
                 if (FramesOnFloor > SaveData2.FramesLimit)
