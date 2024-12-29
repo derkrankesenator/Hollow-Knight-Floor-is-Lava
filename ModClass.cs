@@ -47,7 +47,7 @@ namespace Floor_is_lava
         public static SaveData SaveData { get; set; } = new();
         public static SaveData2 SaveData2 { get; set; } = new();
         new public string GetName() => "Floor is Lava";
-        public override string GetVersion() => "1.0.7.1";
+        public override string GetVersion() => "1.0.7.2";
 
         
 
