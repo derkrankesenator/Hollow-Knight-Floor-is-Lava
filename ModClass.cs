@@ -125,18 +125,7 @@ namespace Floor_is_lava
         }
 
         private void ModHooks_HeroFixedUpdateHook()
-        {
-            if (PlayerData.instance.visitedDirtmouth == true)
-            {
-                if (SaveData2.Dirthmouth == false)
-                {
-                    SaveData2.FramesLimit = FramesOnFloor / SaveData.Divisor_of_frames_in_kings_pass_for_frame_limit;
-                    FramesOnFloor = 0;
-
-                    SaveData2.Dirthmouth = true;
-                }
-            }
-            
+        {   
             if (SaveData.Compass_Mode == true)
             {
                 if (PlayerData.instance.equippedCharm_2 == true)
@@ -154,13 +143,20 @@ namespace Floor_is_lava
             {
                 Final = FloorFrames;
             }
-            FrameInt = Convert.ToInt32(SaveData2.FramesLimit);
             if (PlayerData.instance.atBench == true)
             {
                 FramesOnFloor = 0;
             }
-            if (PlayerData.instance.visitedCrossroads == true)
+            FrameInt = Convert.ToInt32(SaveData2.FramesLimit);
+            if (PlayerData.instance.visitedDirtmouth == true)
             {
+                if (SaveData2.Dirthmouth == false)
+                {
+                    SaveData2.FramesLimit = FramesOnFloor / SaveData.Divisor_of_frames_in_kings_pass_for_frame_limit;
+                    FramesOnFloor = 0;
+
+                    SaveData2.Dirthmouth = true;
+                }
                 if (FramesOnFloor > SaveData2.FramesLimit)
                 {
                     HurtHero(1);
