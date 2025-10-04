@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- Change this to the path of your modded HK installation -->
     <HollowKnightRefs>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\</HollowKnightRefs>
     <!-- Change this to the path where you want the ready-to-upload exports to be -->
-    <ExportDir>C:\Users\anton_nbswj1d\Desktop\HK mods\Exports\</ExportDir>
+    <ExportDir>C:\Users\derkrankesenator\Desktop\workspace\hk\exports\</ExportDir>
     <!-- Uncomment this to generate a documentation file to be included with the mod -->
     <!--<DocumentationFile>$(OutputPath)/$(AssemblyTitle).xml</DocumentationFile>-->
   </PropertyGroup>
@@ -85,10 +85,10 @@
       <HintPath>$(HollowKnightRefs)/Mono.Security.dll</HintPath>
     </Reference>
 	<Reference Include="MagicUI">
-		  <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\MagicUI\MagicUI.dll</HintPath>
+		  <HintPath>$(HollowKnightRefs)/Mods/MagicUI/MagicUI.dll</HintPath>
 	  </Reference>
 	  <Reference Include="Satchel">
-		  <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\Satchel\Satchel.dll</HintPath>
+		  <HintPath>$(HollowKnightRefs)/Mods/Satchel/Satchel.dll</HintPath>
 	  </Reference>
     <Reference Include="MonoMod.RuntimeDetour">
       <HintPath>$(HollowKnightRefs)/MonoMod.RuntimeDetour.dll</HintPath>
