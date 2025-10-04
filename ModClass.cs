@@ -22,34 +22,18 @@ namespace Floor_is_lava
 {
     public class SaveData
     {
-        public int Divisor_of_frames_in_kings_pass_for_frame_limit = 2;
-        public double LowerNumber = 0.5;
+        public double skill_mult = 0.8;
         public bool Compass_Mode = false;
+        public int Startframes = 150;
     }
-    public class SaveData2
-    {
-        public bool HasDash = false;
-        public bool HasCDash = false;
-        public bool HasClaw = false;
-        public bool HasWings = false;
-        public bool HasSDash = false;
-        public bool HasIsma = false;
-        public bool Dirthmouth = false;
-        public double FramesLimit = 1000000.00;
-        public double Minus_frames_On_floor_per_skill = 250.00;
-    }
-    public class Floor_is_lava : Mod, IGlobalSettings<SaveData>, ILocalSettings<SaveData2>
+    public class Floor_is_lava : Mod, IGlobalSettings<SaveData>
     {
         public double FramesOnFloor = 0;
-       
         public bool ToggleButtonInsideMenu => true;
 
         public static SaveData SaveData { get; set; } = new();
-        public static SaveData2 SaveData2 { get; set; } = new();
         new public string GetName() => "Floor is Lava";
-        public override string GetVersion() => "1.0.7.2";
-
-        
+        public override string GetVersion() => "1.1.0.0";
 
         public override void Initialize()
         {
@@ -61,7 +45,6 @@ namespace Floor_is_lava
             On.HeroController.SceneInit += HeroController_SceneInit;
             ModHooks.AfterPlayerDeadHook += ModHooks_AfterPlayerDeadHook;
         }
-
         private void ModHooks_AfterPlayerDeadHook()
         {
             FramesOnFloor = 0;
@@ -80,13 +63,62 @@ namespace Floor_is_lava
             text.Destroy();
             layout.Destroy();
         }
-
+        
         // idea: instead of `{FOF} of {FL}`, maybe `{FOF}/{FL}` is better
-        public string FloorFrames => $"{FramesOnFloor} of {FrameInt}";
-        public string NoCompass => $"";
-        public string Final {get; set;} = $"gaos4325";
-        public int FrameInt = 1000000000;
-
+        public string FloorFrames()
+        {
+            return $"{FramesOnFloor}/{FramesLimit()}";
+        }
+        public string NoCompass = "";
+        public string Final()
+        {
+            if (!SaveData.Compass_Mode)
+            {
+                return FloorFrames();
+            }
+            else
+            {
+                if (PlayerData.instance.equippedCharm_2)
+                {
+                    return FloorFrames();
+                }
+                else
+                {
+                    return NoCompass;
+                }
+            }
+        }
+        public int FramesLimit()
+        {
+            int result;
+            int cnt = 0;
+            if (PlayerData.instance.hasDash)
+            {
+                cnt += 2;
+            }
+            if (PlayerData.instance.hasSuperDash)
+            {
+                cnt++;
+            }
+            if (PlayerData.instance.hasWalljump)
+            {
+                cnt+=2;
+            }
+            if (PlayerData.instance.hasDoubleJump)
+            {
+                cnt+=2;
+            }
+            if (PlayerData.instance.hasShadowDash)
+            {
+                cnt++;
+            }
+            if (PlayerData.instance.hasAcidArmour)
+            {
+                cnt++;
+            }
+            result = (int)(Math.Pow(SaveData.skill_mult, cnt) * SaveData.Startframes);
+            return result;
+        }
 
         LayoutRoot layout;
         TextObject text;
@@ -99,7 +131,7 @@ namespace Floor_is_lava
             layout = new LayoutRoot(false, "Floor is Lava");
             text = new(layout)
             {
-                Text = Final,
+                Text = Final(),
                 Font = UI.TrajanNormal,
                 FontSize = 25
             };
@@ -119,101 +151,17 @@ namespace Floor_is_lava
             {
                 FramesOnFloor++;
             }
-            text.Text = Final;
+            text.Text = Final();
 
             ModHooks_HeroFixedUpdateHook();
         }
 
         private void ModHooks_HeroFixedUpdateHook()
         {   
-            if (SaveData.Compass_Mode == true)
+            if (FramesOnFloor > FramesLimit())
             {
-                if (PlayerData.instance.equippedCharm_2 == true)
-                    {
-                        Final = FloorFrames;
-                        Log(Final);
-                    }
-                else
-                    {
-                        Final = NoCompass;
-                        Log(Final);
-                    }
-            }
-            else
-            {
-                Final = FloorFrames;
-            }
-            if (PlayerData.instance.atBench == true)
-            {
+                HurtHero(1);    
                 FramesOnFloor = 0;
-            }
-            FrameInt = Convert.ToInt32(SaveData2.FramesLimit);
-            if (PlayerData.instance.visitedDirtmouth == true)
-            {
-                if (SaveData2.Dirthmouth == false)
-                {
-                    SaveData2.FramesLimit = FramesOnFloor / SaveData.Divisor_of_frames_in_kings_pass_for_frame_limit;
-                    FramesOnFloor = 0;
-
-                    SaveData2.Dirthmouth = true;
-                }
-                if (FramesOnFloor > SaveData2.FramesLimit)
-                {
-                    HurtHero(1);
-                    FramesOnFloor = 0;
-                }
-                if (PlayerData.instance.atBench == true)
-                {
-                    FramesOnFloor = 0;
-
-                }
-                if (SaveData2.HasDash == false)
-                {
-                    if (PlayerData.instance.hasDash == true)
-                    {
-                        SaveData2.FramesLimit = SaveData2.FramesLimit * SaveData.LowerNumber;
-                        Log($"Limit set to {SaveData2.FramesLimit}");
-                        SaveData2.HasDash = true;
-                    }
-                }
-
-                if (SaveData2.HasWings == false)
-                {
-                    if (PlayerData.instance.hasDoubleJump == true)
-                    {
-                        SaveData2.FramesLimit = SaveData2.FramesLimit * SaveData.LowerNumber;
-                        Log($"Limit set to {SaveData2.FramesLimit}");
-                        SaveData2.HasWings = true;
-                    }
-                }
-                if (SaveData2.HasSDash == false)
-                {
-                    if (PlayerData.instance.hasShadowDash == true)
-                    {
-                        SaveData2.FramesLimit = SaveData2.FramesLimit * SaveData.LowerNumber;
-
-                        Log($"Limit set to {SaveData2.FramesLimit}");
-                        SaveData2.HasSDash = true;
-                    }
-                }
-                if (SaveData2.HasClaw == false)
-                {
-                    if (PlayerData.instance.hasWalljump == true)
-                    {
-                        SaveData2.FramesLimit = SaveData2.FramesLimit * SaveData.LowerNumber;
-                        Log($"Limit set to {SaveData2.FramesLimit}");
-                        SaveData2.HasClaw = true;
-                    }
-                }
-                if (SaveData2.HasCDash == false)
-                {
-                    if (PlayerData.instance.hasSuperDash == true)
-                    {
-                        SaveData2.FramesLimit = SaveData2.FramesLimit * SaveData.LowerNumber;
-                        Log($"Limit set to {SaveData2.FramesLimit}");
-                        SaveData2.HasCDash = true;
-                    }
-                }
             }
         }
 
@@ -222,10 +170,5 @@ namespace Floor_is_lava
             SaveData = s;
         }
         public SaveData OnSaveGlobal() => SaveData;
-        public void OnLoadLocal(SaveData2 s)
-        {
-            SaveData2 = s;
-        }
-        public SaveData2 OnSaveLocal() => SaveData2;
     }
 }
